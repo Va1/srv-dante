@@ -59,7 +59,7 @@
     port: "{{ dante_port |string }}"
     rule: "{{ dante_direct |bool |ternary('allow','deny') }}"
   no_log: "{{ hide_secrets |bool }}"
-  when: lin_firewall == 'ufw'
+  when: dante_direct and (lin_firewall == 'ufw')
   tags: srv_dante_firewall
 
 - name: open/block dante port in ferm
@@ -69,7 +69,7 @@
     zone: "{{ dante_direct |bool |ternary('external','internal') }}"
     solo_zone: true
     comment: dante
-  when: lin_firewall == 'ferm'
+  when: dante_direct and lin_firewall == 'ferm'
   tags:
     - skip_ansible_lint
     - srv_dante_firewall
